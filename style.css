@@ -51,6 +51,14 @@
         z-index: 1;
     }
 
+    .normais {
+        background-color: #ffffff;
+      }
+    
+    .privado {
+        background-color: #ffdede;
+    }
+
     .digite-no-sheetos{
         font-family: "Roboto", sans-serif;
         border: none;
