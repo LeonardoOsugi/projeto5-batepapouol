@@ -4,10 +4,10 @@
 let nome = [];
 
 function perguntaNome(){
-    const nome = prompt("Qual seu nome:");
+    let nome1 = prompt("Qual seu nome:");
 
     let user = {
-        name: nome
+        name: nome1
     };
 
     axios.post('https://mock-api.driven.com.br/api/v6/uol/participants', user);
@@ -22,7 +22,6 @@ function nomeChegou(resposta) {
 
 
 /* Tentativa Falha de Enviar menssagem, mas veja pelo lado bom pelo menos agora aparece alguma coisa no sheetos */
-
 let chatSheetos = [];
 
 function pegarDadosMs() {
@@ -33,14 +32,11 @@ function pegarDadosMs() {
 }
 pegarDadosMs();
 
-function errou(erro) {
-  console.log(erro);
+function errou() {
   alert("Algo de errado não esta certo");
 }
 
 function chegaramMs(resposta) {
-  console.log(resposta);
-  console.log(resposta.data);
   chatSheetos = resposta.data;
   renderizarMs();
 }
@@ -53,33 +49,38 @@ function renderizarMs() {
     ul.innerHTML =
       ul.innerHTML +
       `
-       <div class="${chatSheetos[i].type}">
-          <strong>${chatSheetos[i].from}</strong> para <strong>${chatSheetos[i].to}</strong>: ${chatSheetos[i].text}
-       </div>
+       <li class="${chatSheetos[i].type}">
+          <span>[${chatSheetos[i].time}]</span>
+          <span>${chatSheetos[i].from}</span> para : ${chatSheetos[i].text}
+       </li>
     `;
   }
 }
 renderizarMs();
 
+let elementoMensagem = "";
+
 function addSheetos() {
   // const elementoUsuario = prompt("Qual seu nome: ");
   // const elementoDestinatario = prompt("Nome do destinatário: ");
-  const elementoMensagem = document.querySelector(".digite-no-sheetos");
+  elementoMensagem = document.querySelector('.digite-no-sheetos').value;
+  console.log(elementoMensagem);
   // const elementoTipo = prompt("Qual tipo de mensagem[publico/privado]:");
 
-  const novaMensagem = {
+  let novaMensagem = {
     from: "João",
-    to: "Matilda",
-    text: elementoMensagem.value,
-    type: "normais"
+    to: "Todos",
+    text: elementoMensagem,
+    type: "message"
   };
+  console.log(novaMensagem);
 
-  const promessa = axios.post(
+  let promessa = axios.post(
     "https://mock-api.driven.com.br/api/v6/uol/messages",
     novaMensagem
   );
   promessa.then(pegarDadosMs);
-  promessa.cath(errou);
+  promessa.catch(errou);
 
   renderizarMs();
 }
