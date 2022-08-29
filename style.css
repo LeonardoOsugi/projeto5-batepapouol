@@ -30,6 +30,7 @@
     .sheetos{
         margin-top: 10px;
         margin-bottom: 10px;
+        overflow: scroll;
     }
 
     .icones-baixo{
@@ -57,6 +58,10 @@
 
     .status{
         background-color:#DCDCDC;
+    }
+
+    .negrito{
+        font-weight: bold;
     }
 
     .digite-no-sheetos{

@@ -3,8 +3,9 @@
 
 let nome = [];
 
+let nome1 = prompt("Qual seu nome:");
+
 function perguntaNome(){
-    let nome1 = prompt("Qual seu nome:");
 
     let user = {
         name: nome1
@@ -13,6 +14,7 @@ function perguntaNome(){
     axios.post('https://mock-api.driven.com.br/api/v6/uol/participants', user);
     const promessa = axios.get('https://mock-api.driven.com.br/api/v6/uol/participants');
     promessa.then(nomeChegou);
+    promessa.catch(errou);
 }
 perguntaNome();
 
@@ -34,11 +36,27 @@ pegarDadosMs();
 
 function errou() {
   alert("Algo de errado não esta certo");
+  nome1 = prompt("Qual seu nome:");
+
+  user = {
+    name: nome1
+  };
+  axios.post('https://mock-api.driven.com.br/api/v6/uol/participants', user);
+    const promessa = axios.get('https://mock-api.driven.com.br/api/v6/uol/participants');
+    promessa.then(nomeChegou);
 }
 
 function chegaramMs(resposta) {
   chatSheetos = resposta.data;
+  console.log(chatSheetos);
   renderizarMs();
+}
+
+function ultimaMs() {
+  let chat = document.querySelector('.sheetos');
+  let ultima = chat.lastElementChild;
+  console.log(ultima);
+  ultima.scrollIntoView();
 }
 
 function renderizarMs() {
@@ -51,12 +69,31 @@ function renderizarMs() {
       `
        <li class="${chatSheetos[i].type}">
           <span>[${chatSheetos[i].time}]</span>
-          <span>${chatSheetos[i].from}</span> para : ${chatSheetos[i].text}
+          <span class="negrito">${chatSheetos[i].from}</span> para <span class="negrito">${chatSheetos[i].to}</span> : ${chatSheetos[i].text}
        </li>
     `;
+
+    if(chatSheetos[i].type  === 'private_message' && nome1 === chatSheetos[i].to){
+      ul.innerHTML =
+      ul.innerHTML +
+      `
+       <li class="${chatSheetos[i].type}">
+          <span>[${chatSheetos[i].time}]</span>
+          <span class="negrito">${chatSheetos[i].from}</span> para <span class="negrito">${chatSheetos[i].to}</span> : ${chatSheetos[i].text}
+       </li>
+    `;
+    }
   }
+  ultimaMs();
 }
-renderizarMs();
+
+setInterval(pegarDadosMs, 3000);
+
+/*while(chatSheetos.type !== 'status' && chatSheetos.text !== 'sai da sala...'){
+  setTimeout(renderizarMs, 3000);
+}*/
+
+
 
 let elementoMensagem = "";
 
@@ -68,7 +105,7 @@ function addSheetos() {
   // const elementoTipo = prompt("Qual tipo de mensagem[publico/privado]:");
 
   let novaMensagem = {
-    from: "João",
+    from: nome1,
     to: "Todos",
     text: elementoMensagem,
     type: "message"
@@ -79,8 +116,9 @@ function addSheetos() {
     "https://mock-api.driven.com.br/api/v6/uol/messages",
     novaMensagem
   );
-  promessa.then(pegarDadosMs);
+  promessa.then(renderizarMs);
   promessa.catch(errou);
 
   renderizarMs();
+  ultimaMs();
 }
